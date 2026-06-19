@@ -3,7 +3,7 @@
 
 ## Overview
 
-Add country, city, ASN, company, and VPN/proxy/Tor security data to Nginx as native variables, powered by [IPGeolocation.io](https://ipgeolocation.io) MMDB databases. This Nginx IP geolocation module reads any IPGeolocation.io MaxMind DB (`.mmdb`) file directly from disk and exposes the data as `$ip_*` variables you can use anywhere in your `nginx.conf`, with no API calls, no network latency, and no per-request cost.
+Add country, city, ASN, abuse contact, company, and VPN/proxy/Tor security data to Nginx as native variables, powered by [IPGeolocation.io](https://ipgeolocation.io) MMDB databases. This Nginx IP geolocation module reads any IPGeolocation.io MaxMind DB (`.mmdb`) file directly from disk and exposes the data as `$ip_*` variables you can use anywhere in your `nginx.conf`, with no API calls, no network latency, and no per-request cost.
 
 Use it to block anonymous traffic, redirect visitors by country, enforce geo-blocking and compliance rules, personalize content, and enrich your access logs, all at the edge before requests ever reach your application.
 
