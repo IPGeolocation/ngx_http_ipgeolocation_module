@@ -124,7 +124,7 @@ fi
 
 This `config` file links `libmaxminddb` for you and supports both static and dynamic builds, so you do not have to pass the library by hand on the configure line.
 
-### 2. Get the matching Nginx source
+### Get the matching Nginx source
 
 ```bash
 # Replace x.y.z with the version that matches your installed Nginx
@@ -165,7 +165,7 @@ Then load it at the very top of `nginx.conf`, before the `events` block:
 load_module modules/ngx_http_ipgeolocation_module.so;
 ```
 
-### 4. Verify the build
+### Verify the build
 
 ```bash
 nginx -V 2>&1 | tr ' ' '\n' | grep -i ipgeolocation   # static build check
