@@ -1,12 +1,3 @@
-<!--
-Maintainer notes (delete before publishing if you wish):
-1. Replace every "github.com/IPGeolocation/nginx-ipgeolocation-module" URL with your final repository path.
-2. Suggested GitHub repo name: nginx-ipgeolocation-module
-3. Suggested GitHub "About" description (heavily weighted for search):
-   "Nginx IP geolocation module that turns IPGeolocation.io MMDB databases into native nginx variables for country, city, ASN, company, and VPN/proxy/Tor security data. No API calls, no per-request cost."
-4. Suggested GitHub Topics (use all 20 slots): nginx, nginx-module, ip-geolocation, geoip, geoip2, maxmind, mmdb, ipgeolocation, vpn-detection, proxy-detection, tor-detection, geoblocking, geo-blocking, threat-intelligence, asn, ip-lookup, libmaxminddb, web-security, bot-detection, ip-intelligence
--->
-
 # Nginx IP Geolocation Module for IPGeolocation.io
 
 
