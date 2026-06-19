@@ -571,17 +571,17 @@ Install the libmaxminddb development package (see [Requirements](#requirements))
 
 <details>
 <summary><strong>Does this module call the IPGeolocation.io API?</strong></summary>
-No. It reads local `.mmdb` database files and does not make any outbound requests. There are no per-request costs. To update the data, simply replace the database files on disk.
+No. It reads local <code>.mmdb</code> database files and does not make any outbound requests. There are no per-request costs. To update the data, simply replace the database files on disk.
 </details>
 
 <details>
 <summary><strong>How is this different from the Nginx GeoIP2 module?</strong></summary>
-Both modules read MMDB files through `libmaxminddb`. However, this module is built specifically for IPGeolocation.io databases. It provides ready-to-use `$ip_*` variables for location, company, ASN, security, and abuse data, normalizes boolean values to `1` and `0`, joins provider lists, and automatically supports multiple schema versions without requiring manual `geoip2` field mappings.
+Both modules read MMDB files through `libmaxminddb`. However, this module is built specifically for IPGeolocation.io databases. It provides ready-to-use <code>$ip_*</code> variables for location, company, ASN, security, and abuse data, normalizes boolean values to <code>1</code> and <code>0</code>, joins provider lists, and automatically supports multiple schema versions without requiring manual <code>geoip2</code> field mappings.
 </details>
 
 <details>
 <summary><strong>Can I use more than one database at the same time?</strong></summary>
-Yes. You can declare `ipgeolocation_db` once for each database file. Databases are checked in declaration order, and the first one containing the requested field is used.
+Yes. You can declare <code>ipgeolocation_db</code> once for each database file. Databases are checked in declaration order, and the first one containing the requested field is used.
 </details>
 
 <details>
@@ -596,12 +596,12 @@ Yes. IPGeolocation.io MMDB databases support both IPv4 and IPv6 addresses, and t
 
 <details>
 <summary><strong>How do I update the data?</strong></summary>
-Replace the existing `.mmdb` files on disk with the updated versions and reload Nginx. IPGeolocation.io publishes refreshed databases daily.
+Replace the existing <code>.mmdb</code> files on disk with the updated versions and reload Nginx. IPGeolocation.io publishes refreshed databases daily.
 </details>
 
 <details>
 <summary><strong>Can I forward this data to my application?</strong></summary>
-Yes. Use `proxy_set_header` to pass any `$ip_*` variable to your backend application, allowing it to receive geolocation and risk information without performing its own database lookups.
+Yes. Use <code>proxy_set_header</code> to pass any <code>$ip_*</code> variable to your backend application, allowing it to receive geolocation and risk information without performing its own database lookups.
 </details>
 
 ---
