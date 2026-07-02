@@ -268,7 +268,7 @@ The **Source database** column names the IPGeolocation.io product that supplies 
 ### Location: state, district, city
 
 | Variable | Description | Example | 
-| --- | --- | --- | --- |
+| --- | --- | --- | 
 | `$ip_state_code` | State or province code | `US-PA` |
 | `$ip_state_name` | State or province name | `Pennsylvania` |
 | `$ip_district_name` | District or county name | `Philadelphia County` |

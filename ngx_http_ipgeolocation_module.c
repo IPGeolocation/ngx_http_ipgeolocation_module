@@ -473,7 +473,7 @@
      return NGX_OK;
  }
  
- 
+
  /*
   * Resolve an array field (e.g. proxy_provider_names) and join every string
   * element into a single ", "-separated value.
@@ -662,7 +662,7 @@
  
      return NGX_OK;
  }
- 
+
  
  static void *
  ngx_http_ipgeo_create_main_conf(ngx_conf_t *cf)
