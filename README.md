@@ -1,6 +1,5 @@
 # Nginx IP Geolocation Module for IPGeolocation.io
 
-
 ## Overview
 
 Add country, city, ASN, abuse contact, company, and VPN/proxy/Tor security data to Nginx as native variables, powered by [IPGeolocation.io](https://ipgeolocation.io) MMDB databases. This Nginx IP geolocation module reads any IPGeolocation.io DBs (`.mmdb`) file directly from disk and exposes the data as `$ip_*` variables you can use anywhere in your `nginx.conf`, with no API calls, no network latency, and no per-request cost.
@@ -220,7 +219,7 @@ If a database fails to open, Nginx refuses to start and logs the reason, so a ba
 
 ### `ipgeolocation_trust_forwarded_header`
 
-```
+```bash
 Syntax:   ipgeolocation_trust_forwarded_header on | off;
 Context:  http
 Default:  on
@@ -242,8 +241,6 @@ http {
 ## Variable reference
 
 Every variable below resolves only if a database you loaded contains the matching field. Variables backed by a database you did not load simply return an empty value, so it is safe to reference any of them.
-
-The **Source database** column names the IPGeolocation.io product that supplies each field. A bundle that combines several products supplies all of their fields through the same variables.
 
 ### Location: country
 
