@@ -30,7 +30,7 @@ if ($ip_country_code = DE) { return 302 https://de.example.com$request_uri; }
 - [Client IP selection and X-Forwarded-For](#client-ip-selection-and-x-forwarded-for)
 - [Getting the databases](#getting-the-databases)
 - [Troubleshooting](#troubleshooting)
-- [FAQ](#faq)
+- [FAQ](#frequently-asked-questions)
 - [License](#license)
 
 ---
