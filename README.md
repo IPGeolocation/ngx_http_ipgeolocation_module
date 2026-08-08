@@ -3,7 +3,7 @@
 
 ## Overview
 
-Add country, city, ASN, abuse contact, company, and VPN/proxy/Tor security data to Nginx as native variables, powered by [IPGeolocation.io](https://ipgeolocation.io) MMDB databases. This Nginx IP geolocation module reads any IPGeolocation.io MaxMind DB (`.mmdb`) file directly from disk and exposes the data as `$ip_*` variables you can use anywhere in your `nginx.conf`, with no API calls, no network latency, and no per-request cost.
+Add country, city, ASN, abuse contact, company, and VPN/proxy/Tor security data to Nginx as native variables, powered by [IPGeolocation.io](https://ipgeolocation.io) MMDB databases. This Nginx IP geolocation module reads any IPGeolocation.io DBs (`.mmdb`) file directly from disk and exposes the data as `$ip_*` variables you can use anywhere in your `nginx.conf`, with no API calls, no network latency, and no per-request cost.
 
 Use it to block anonymous traffic, redirect visitors by country, enforce geo-blocking and compliance rules, personalize content, and enrich your access logs, all at the edge before requests ever reach your application.
 
@@ -65,7 +65,7 @@ Because the first match wins, you can layer databases. For example, load a Geolo
 ## Requirements
 
 - **Nginx source** that matches the binary you intend to run. This module is compiled into Nginx, so you build Nginx with the module attached.
-- **libmaxminddb** development headers and library. This is the official MaxMind DB reader that the module links against.
+- **libmaxminddb** development headers and library. This is the official MMDB reader that the module links against.
 - A C compiler toolchain (`gcc` or `clang`, `make`).
 - At least one IPGeolocation.io `.mmdb` database file. See [Getting the databases](#getting-the-databases).
 
@@ -538,7 +538,7 @@ mmdblookup --file /etc/nginx/ipgeo/db-ip-security.mmdb --ip 2.56.188.34
 
 **Nginx fails to start with "failed to open" for a database.**\
 
-Check that the path in `ipgeolocation_db` is correct, the file exists, and the Nginx worker user can read it. The module logs the exact MaxMind error to help you diagnose it.
+Check that the path in `ipgeolocation_db` is correct, the file exists, and the Nginx worker user can read it. The module logs the exact error to help you diagnose it.
 
 **A variable is always empty.**
 
