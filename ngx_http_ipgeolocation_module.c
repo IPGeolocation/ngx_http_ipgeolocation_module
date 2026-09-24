@@ -1,7 +1,7 @@
 /*
  * ngx_http_ipgeolocation_module.c
  *
- * Nginx module that exposes IPGeolocation.io MaxMind DB (.mmdb) data as
+ * Nginx module that exposes IPGeolocation.io MMDBs (.mmdb) data as
  * nginx variables.
  *
  * Design
@@ -185,6 +185,30 @@
          { {"security","is_known_attacker",NULL}, {"is_known_attacker",NULL} } },
      { "ip_is_bot",
          { {"security","is_bot",NULL}, {"is_bot",NULL} } },
+     { "ip_bot_confidence_score",
+         { {"security","bot_confidence_score",NULL}, {"bot_confidence_score",NULL} } },
+
+     { "ip_bot_operator_name",
+         { {"security","bot_operator_name",NULL}, {"bot_operator_name",NULL} } },
+
+     { "ip_bot_type",
+         { {"security","bot_type",NULL}, {"bot_type",NULL} } },
+
+     { "ip_is_known_good_bot",
+         { {"security","is_known_good_bot",NULL}, {"is_known_good_bot",NULL} } },
+
+     { "ip_bot_last_seen",
+         { {"security","bot_last_seen",NULL}, {"bot_last_seen",NULL} } },
+
+     { "ip_is_corporate_gateway",
+         { {"security","is_corporate_gateway",NULL}, {"is_corporate_gateway",NULL} } },
+
+     { "ip_corporate_gateway_type",
+         { {"security","corporate_gateway_type",NULL}, {"corporate_gateway_type",NULL} } },
+
+     { "ip_corporate_gateway_provider_name",
+         { {"security","corporate_gateway_provider_name",NULL}, {"corporate_gateway_provider_name",NULL} } },
+
      { "ip_is_spam",
          { {"security","is_spam",NULL}, {"is_spam",NULL} } },
      { "ip_is_cloud_provider",
