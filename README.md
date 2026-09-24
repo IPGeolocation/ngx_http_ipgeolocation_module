@@ -701,39 +701,30 @@ Install the libmaxminddb development package (see [Requirements](#requirements))
 
 ## Frequently Asked Questions
 
-<details>
-<summary><strong>Does this module call the IPGeolocation.io API?</strong></summary>
-No. It reads local <code>.mmdb</code> database files and does not make any outbound requests. There are no per-request costs. To update the data, <a href="#updating-the-databases">replace the database files safely</a> and reload Nginx.
+<details> <summary><strong>Does this module call the IPGeolocation.io API?</strong></summary> No. It reads local `.mmdb` database files and does not make any outbound requests. There are no per-request costs. To update the data, [replace the database files safely](#updating-the-databases) and reload Nginx. </details>
+
+<details> 
+<summary><strong>How is this different from the Nginx GeoIP2 module?</strong></summary> Both modules read MMDB files through `libmaxminddb`. However, this module is built specifically for IPGeolocation.io databases. It provides [ready-to-use `$ip_*` variables](#variable-reference) for location, company, ASN, security, and abuse data, normalizes boolean values to `1` and `0`, joins provider lists, and automatically supports multiple schema versions without requiring manual `geoip2` field mappings. 
 </details>
 
-<details>
-<summary><strong>How is this different from the Nginx GeoIP2 module?</strong></summary>
-Both modules read MMDB files through <code>libmaxminddb</code>. However, this module is built specifically for IPGeolocation.io databases. It provides <a href="#variable-reference">ready-to-use <code>$ip_*</code> variables</a> for location, company, ASN, security, and abuse data, normalizes boolean values to <code>1</code> and <code>0</code>, joins provider lists, and automatically supports multiple schema versions without requiring manual <code>geoip2</code> field mappings.
+<details> 
+<summary><strong>Can I use more than one database at the same time?</strong></summary> Yes. You can declare `ipgeolocation_db` once for each database file. Databases are checked in declaration order, and the first one containing the requested field is used (see [how database priority order works](#how-it-works)). 
 </details>
 
-<details>
-<summary><strong>Can I use more than one database at the same time?</strong></summary>
-Yes. You can declare <code>ipgeolocation_db</code> once for each database file. Databases are checked in declaration order, and the first one containing the requested field is used (see <a href="#how-it-works">how database priority order works</a>).
+<details> 
+<summary><strong>Do I have to load every database?</strong></summary> No. Load only the databases you need. Variables associated with databases that are not loaded simply return empty values, making it safe to reference them in your configuration. 
 </details>
 
-<details>
-<summary><strong>Do I have to load every database?</strong></summary>
-No. Load only the databases you need. Variables associated with databases that are not loaded simply return empty values, making it safe to reference them in your configuration.
+<details> <summary><strong>Does it support IPv4 and IPv6?</strong></summary> Yes. IPGeolocation.io MMDB databases support both IPv4 and IPv6 addresses, and the module automatically performs lookups using whichever address the client provides. Make sure your `server` also listens on IPv6 (for example, `listen [::]:80;`). 
 </details>
 
-<details>
-<summary><strong>Does it support IPv4 and IPv6?</strong></summary>
-Yes. IPGeolocation.io MMDB databases support both IPv4 and IPv6 addresses, and the module automatically performs lookups using whichever address the client provides. Make sure your <code>server</code> also listens on IPv6 (for example <code>listen [::]:80;</code>).
-</details>
-
-<details>
-<summary><strong>How do I update the data?</strong></summary>
-IPGeolocation.io publishes refreshed databases daily. Download the new file, swap it in atomically with <code>mv</code>, and reload Nginx. See <a href="#updating-the-databases">update databases without downtime</a> for a ready-to-use script.
+<details> 
+<summary><strong>How do I update the data?</strong></summary> IPGeolocation.io publishes refreshed databases daily. Download the new file, swap it in atomically with `mv`, and reload Nginx. See [update databases without downtime](#updating-the-databases) for a ready-to-use script. 
 </details>
 
 <details>
 <summary><strong>Can I forward this data to my application?</strong></summary>
-Yes. Use <code>proxy_set_header</code> to <a href="#quick-start">pass geolocation headers to your backend</a>, allowing it to receive geolocation and risk information without performing its own database lookups.
+Yes. Use `proxy_set_header` to [pass geolocation headers to your backend](#quick-start) allowing it to receive geolocation and risk information without performing its own database lookups.
 </details>
 
 ---
