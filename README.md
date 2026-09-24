@@ -704,18 +704,18 @@ Install the libmaxminddb development package (see [Requirements](#requirements))
 <details> <summary><strong>Does this module call the IPGeolocation.io API?</strong></summary> No. It reads local `.mmdb` database files and does not make any outbound requests. There are no per-request costs. To update the data, [replace the database files safely](#updating-the-databases) and reload Nginx. </details>
 
 <details> 
-<summary><strong>How is this different from the Nginx GeoIP2 module?</strong></summary> Both modules read MMDB files through `libmaxminddb`. However, this module is built specifically for IPGeolocation.io databases. It provides [ready-to-use `$ip_*` variables](#variable-reference) for location, company, ASN, security, and abuse data, normalizes boolean values to `1` and `0`, joins provider lists, and automatically supports multiple schema versions without requiring manual `geoip2` field mappings. 
+<summary><strong>How is this different from the Nginx GeoIP2 module?</strong></summary> Both modules read MMDB files through `libmaxminddb`. However, this module is built specifically for IPGeolocation.io databases. It provides [ready-to-use `$ip_*` variables](#variable-reference) for location, company, ASN, security, and abuse data, normalizes boolean values to `1` and `0`, joins provider lists, and automatically supports multiple schema versions without requiring manual `geoip2` field mappings.
 </details>
 
 <details> 
-<summary><strong>Can I use more than one database at the same time?</strong></summary> Yes. You can declare `ipgeolocation_db` once for each database file. Databases are checked in declaration order, and the first one containing the requested field is used (see [how database priority order works](#how-it-works)). 
+<summary><strong>Can I use more than one database at the same time?</strong></summary> Yes. You can declare `ipgeolocation_db` once for each database file. Databases are checked in declaration order, and the first one containing the requested field is used (see [how database priority order works](#how-it-works)).
 </details>
 
 <details> 
 <summary><strong>Do I have to load every database?</strong></summary> No. Load only the databases you need. Variables associated with databases that are not loaded simply return empty values, making it safe to reference them in your configuration. 
 </details>
 
-<details> <summary><strong>Does it support IPv4 and IPv6?</strong></summary> Yes. IPGeolocation.io MMDB databases support both IPv4 and IPv6 addresses, and the module automatically performs lookups using whichever address the client provides. Make sure your `server` also listens on IPv6 (for example, `listen [::]:80;`). 
+<details> <summary><strong>Does it support IPv4 and IPv6?</strong></summary> Yes. IPGeolocation.io MMDB databases support both IPv4 and IPv6 addresses, and the module automatically performs lookups using whichever address the client provides. Make sure your `server` also listens on IPv6 (for example, `listen [::]:80;`).
 </details>
 
 <details> 
