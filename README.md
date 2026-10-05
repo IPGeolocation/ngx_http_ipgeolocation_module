@@ -25,7 +25,7 @@ if ($ip_country_code = DE) { return 302 https://de.example.com$request_uri; }
 - [Testing your configuration](#testing-your-configuration)
 - [Configuration directives](#configuration-directives)
 - [Variable reference](#variable-reference)
-- [Real world examples](#real-world-examples)
+- [Real-world examples](#real-world-examples)
 - [How values are formatted](#how-values-are-formatted)
 - [Client IP selection and X-Forwarded-For](#client-ip-selection-and-x-forwarded-for)
 - [Getting the databases](#getting-the-databases)
@@ -50,7 +50,7 @@ Most teams reach for IP intelligence in one of two ways: calling a remote API on
 
 ## How it works
 
-You load one or more `.mmdb` files with the [`ipgeolocation_db` directive](#ipgeolocation_db). The module opens each file at startup and keeps it memory mapped for the life of the worker process.
+You load one or more `.mmdb` files with the [`ipgeolocation_db` directive](#ipgeolocation_db). The module opens each file at startup and keeps it memory-mapped for the life of the worker process.
 
 When Nginx evaluates an `$ip_*` variable during a request, the module:
 
@@ -149,7 +149,7 @@ Only `make install` needs `sudo`. If libmaxminddb is installed outside the defau
 
 #### As a dynamic module (optional)
 
-If you prefer to load the module at runtime instead of compiling it in, build it dynamically. The Nginx source version must exactly match the Nginx binary that will load the module, otherwise Nginx rejects it as "not binary compatible".
+If you prefer to load the module at runtime instead of compiling it in, build it dynamically. The Nginx source version must exactly match the Nginx binary that will load the module; otherwise, Nginx rejects it as "not binary compatible".
 
 ```bash
 ./configure --add-dynamic-module=/path/to/ngx_http_ipgeolocation_module --with-compat
@@ -371,7 +371,7 @@ Requires the [IP to ASN database](https://ipgeolocation.io/ip-asn-database.html)
 
 Requires the [IP Security database](https://ipgeolocation.io/ip-security-database.html). Field details are in the [IP Security database fields and schema](https://ipgeolocation.io/documentation/ip-security-database.html#response-schema).
 
-Boolean flags resolve to `1` or `0` so you can test them directly in `if` blocks and `map` directives. Provider lists (for example proxy and VPN provider names) are joined into a single comma separated value.
+Boolean flags resolve to `1` or `0` so you can test them directly in `if` blocks and `map` directives. Provider lists (for example, proxy and VPN provider names) are joined into a single comma-separated value.
 
 | Variable | Description | Example |
 | --- | --- | --- |
@@ -379,7 +379,7 @@ Boolean flags resolve to `1` or `0` so you can test them directly in `if` blocks
 | `$ip_is_tor` | 1 if the IP is a Tor exit node | `1` |
 | `$ip_is_proxy` | 1 if the IP is a proxy | `1` |
 | `$ip_is_vpn` | 1 if the IP is a VPN | `1` |
-| `$ip_is_relay` | 1 if the IP is a relay (for example iCloud Private Relay) | `0` |
+| `$ip_is_relay` | 1 if the IP is a relay (for example, iCloud Private Relay) | `0` |
 | `$ip_is_residential_proxy` | 1 if the IP is a residential proxy | `1` |
 | `$ip_is_anonymous` | 1 if the IP is anonymized | `1` |
 | `$ip_is_known_attacker` | 1 if the IP is a known attacker | `1` |
@@ -444,7 +444,7 @@ Using `if` only to `return` a response is safe. For anything more complex, compu
 
 ### Block anonymous and malicious traffic (security)
 
-Stop Tor exit nodes, known attackers, and high risk IPs before they reach your application. This is useful in front of login pages, checkout flows, signup forms, and admin panels.
+Stop Tor exit nodes, known attackers, and high-risk IPs before they reach your application. This is useful in front of login pages, checkout flows, signup forms, and admin panels.
 
 ```nginx
 # Requires the IP Security database
@@ -570,11 +570,11 @@ server {
 }
 ```
 
-IP addresses combined with city level location are personal data under regulations such as GDPR, so apply your normal log retention and access policies. More options are in the [Nginx log_format documentation](https://nginx.org/en/docs/http/ngx_http_log_module.html).
+IP addresses combined with city-level location are personal data under regulations such as GDPR, so apply your normal log retention and access policies. More options are in the [Nginx log_format documentation](https://nginx.org/en/docs/http/ngx_http_log_module.html).
 
 ### Surface the abuse contact for an offending IP (incident response)
 
-When you spot abuse in your logs, the abuse contact data tells you exactly where to send a report, without a manual WHOIS lookup. This is a debug endpoint: it is restricted to internal addresses, and values are not JSON escaped.
+When you spot abuse in your logs, the abuse contact data tells you exactly where to send a report, without a manual WHOIS lookup. This is a debug endpoint: it is restricted to internal addresses, and values are not JSON-escaped.
 
 ```nginx
 # Requires the IP Abuse Contact database
@@ -591,7 +591,7 @@ location = /debug/abuse {
 ## How values are formatted
 
 - **Booleans become `1` or `0`.** Whether the database stores a true boolean or the strings `"true"` and `"false"`, the module normalizes both to `1` and `0`. This means `$ip_is_vpn`, `$ip_is_tor`, and the other flags work directly in `if` tests and `map` blocks.
-- **Lists are joined with `", "`.** Array fields such as proxy and VPN provider names are returned as a single comma separated string.
+- **Lists are joined with `", "`.** Array fields such as proxy and VPN provider names are returned as a single comma-separated string.
 - **Numbers are rendered as text.** Scores and coordinates come back as plain strings, for example `80` or `-75.165220`, which is exactly what Nginx variables expect.
 - **Empty when not found.** If no loaded database contains a field for the client IP, the variable resolves to an empty value. Reference any variable safely, even for databases you did not load.
 - **Not cached per request.** These variables are evaluated each time they are used, so they always reflect the current request's client IP.
@@ -609,7 +609,7 @@ The module geolocates a single IP address per request. Which one it uses depends
 - **`off`:** the module always uses the real connection peer address and ignores `X-Forwarded-For` entirely.
 
 > [!IMPORTANT]
-> The leftmost `X-Forwarded-For` address is controlled by the client. Many load balancers and CDNs **append** the real IP to the header instead of replacing it, so a visitor can send a fake header to change their apparent country or hide a flagged IP, even behind a proxy. Keep `on` only if your proxy overwrites the header. Otherwise set `ipgeolocation_trust_forwarded_header off;` and use the [Nginx realip module](https://nginx.org/en/docs/http/ngx_http_realip_module.html) (`set_real_ip_from` plus `real_ip_header`), which replaces the peer address with the true client IP from trusted proxies only.
+> The leftmost `X-Forwarded-For` address is controlled by the client. Many load balancers and CDNs **append** the real IP to the header instead of replacing it, so a visitor can send a fake header to change their apparent country or hide a flagged IP, even behind a proxy. Keep `on` only if your proxy overwrites the header. Otherwise, set `ipgeolocation_trust_forwarded_header off;` and use the [Nginx realip module](https://nginx.org/en/docs/http/ngx_http_realip_module.html) (`set_real_ip_from` plus `real_ip_header`), which replaces the peer address with the true client IP from trusted proxies only.
 
 A safe setup behind a load balancer:
 
@@ -639,7 +639,7 @@ Relevant databases and their documentation:
 - [IP to ASN Database](https://ipgeolocation.io/ip-asn-database.html): AS number, organization, type, RIR, and allocation date. See the [IP to ASN extended database schema](https://ipgeolocation.io/documentation/ip-asn-database-extended.html).
 - [IP Abuse Contact Database](https://ipgeolocation.io/ip-abuse-contact-database.html): abuse email, phone, organization, route, and country. See the [IP Abuse Contact database field reference](https://ipgeolocation.io/documentation/ip-abuse-contact-database.html).
 
-You can buy a single database, a ready made bundle (for example IP to Location plus Company plus ASN plus Abuse), or a custom build. [Compare IP database pricing and bundles](https://ipgeolocation.io/db-pricing.html).
+You can buy a single database, a ready-made bundle (for example IP to Location plus Company plus ASN plus Abuse), or a custom build. [Compare IP database pricing and bundles](https://ipgeolocation.io/db-pricing.html).
 
 After downloading, confirm which fields a file contains with [mmdbio](https://github.com/IPGeolocation/mmdbio):
 
@@ -654,7 +654,7 @@ mmdbio read --db /etc/nginx/ipgeo/db-ip-security.mmdb --ip 2.56.188.34
 IPGeolocation.io publishes refreshed databases daily. Replace the files on disk, then reload Nginx so workers open the new versions.
 
 > [!IMPORTANT]
-> The module memory maps each database, so never overwrite a live `.mmdb` file in place (for example with `cp` or `wget -O`). Workers can read a half-written file and crash. Download to a temporary file in the **same directory**, then `mv` it over the old one, which is an atomic swap. Always run `nginx -t` before reloading so a corrupt download never takes the server down.
+> The module memory-maps each database, so never overwrite a live `.mmdb` file in place (for example with `cp` or `wget -O`). Workers can read a half-written file and crash. Download to a temporary file in the **same directory**, then `mv` it over the old one, which is an atomic swap. Always run `nginx -t` before reloading so a corrupt download never takes the server down.
 
 ```bash
 #!/bin/sh
@@ -667,7 +667,7 @@ mv "$DIR/db-ip-security.mmdb.tmp" "$DIR/db-ip-security.mmdb"
 nginx -t && nginx -s reload
 ```
 
-Schedule it with cron or a systemd timer, for example daily at 04:00: `0 4 * * * /usr/local/bin/update-ipgeo.sh`.
+Schedule it with cron or a systemd timer, for example, daily at 04:00: `0 4 * * * /usr/local/bin/update-ipgeo.sh`.
 
 ---
 
@@ -724,7 +724,7 @@ Install the libmaxminddb development package (see [Requirements](#requirements))
 
 <details>
 <summary><strong>Can I forward this data to my application?</strong></summary>
-Yes. Use `proxy_set_header` to [pass geolocation headers to your backend](#quick-start) allowing it to receive geolocation and risk information without performing its own database lookups.
+Yes. Use `proxy_set_header` to [pass geolocation headers to your backend](#quick-start), allowing it to receive geolocation and risk information without performing its own database lookups.
 </details>
 
 ---
