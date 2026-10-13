@@ -2,7 +2,7 @@
 
 ## Overview
 
-Add country, city, ASN, abuse contact, company, and [VPN, proxy and Tor detection data](https://ipgeolocation.io/ip-security-database.html) to Nginx as native variables, powered by [IPGeolocation.io](https://ipgeolocation.io) MMDB databases. This Nginx IP geolocation module reads any IPGeolocation.io DBs (`.mmdb`) file directly from disk and exposes the data as [`$ip_*` variables](#variable-reference) you can use anywhere in your `nginx.conf`, with no API calls, no network latency, and no per-request cost.
+Add country, city, ASN, abuse contact, company, and [VPN, proxy and Tor detection data](https://ipgeolocation.io/ip-security-database.html) to Nginx as native variables, powered by [IPGeolocation.io](https://ipgeolocation.io) MMDB databases. This Nginx IP geolocation module reads any IPGeolocation.io DB (`.mmdb`) file directly from disk and exposes the data as [`$ip_*` variables](#variable-reference) you can use anywhere in your `nginx.conf`, with no API calls, no network latency, and no per-request cost.
 
 Use it to [block anonymous traffic](#block-anonymous-and-malicious-traffic-security), [redirect visitors by country](#redirect-and-personalize-by-country-geo-personalization), enforce [geo-blocking and compliance rules](#geo-blocking-and-compliance-access-control), personalize content, and [enrich your access logs](#enrich-access-logs-for-analytics-and-fraud-review-observability), all at the edge before requests ever reach your application.
 
@@ -409,7 +409,7 @@ Requires the [residential proxy detection database](https://ipgeolocation.io/res
 
 | Variable | Description | Example |
 | --- | --- | --- |
-| `$ip_residential_proxy_provider_name` | Residential proxy provider name | `Evomy Proxy` |
+| `$ip_residential_proxy_provider_name` | Residential proxy provider name | `Evomi Proxy` |
 | `$ip_residential_proxy_last_seen` | Date last seen as a residential proxy | `2026-05-23` |
 
 ### Hosting
