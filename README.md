@@ -343,7 +343,7 @@ Requires the [IP Geolocation database](https://ipgeolocation.io/ip-geolocation-d
 
 ### Company and ISP
 
-Requires the [IP Company database](https://ipgeolocation.io/ip-company-database.html). Field details are in the [IP Company database schema reference](https://ipgeolocation.io/documentation/ip-company-database.html#response-schema).
+Requires the [IP Company database](https://ipgeolocation.io/ip-company-database.html). Field details are in the [IP Company database schema reference](https://ipgeolocation.io/documentation/ip-company-database.html#mmdb-response-schema).
 
 | Variable | Description | Example |
 | --- | --- | --- |
