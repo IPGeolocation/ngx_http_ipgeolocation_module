@@ -661,10 +661,12 @@ The script needs `curl`, `openssl`, `unzip`, `sha256sum` and [mmdbio](https://gi
 ```bash
 #!/bin/sh
 set -eu
+# cron runs with a minimal PATH, so make sure nginx and mmdbio can be found.
+export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 DIR=/etc/nginx/ipgeo
 DB=db-ip-security.mmdb                              # the .mmdb file inside the archive
 ARCHIVE_URL="https://your-database-archive-url"    # from your IPGeolocation.io account
-SIGNATURE_URL="https://your-signature-file-url"    # from your IPGeolocation.io account
+SIGNATURE_URL="https://your-signature-file-url"    # the archive URL with downloadSignature=true
 PUBLIC_KEY="$DIR/public-key.pem"                   # saved once from your Public Key URL
 
 # Work inside $DIR so the final mv stays on one filesystem, which makes it atomic.
@@ -677,6 +679,7 @@ curl -fsSL "$SIGNATURE_URL" -o "$WORK/release.sig"
 openssl dgst -sha256 -verify "$PUBLIC_KEY" -signature "$WORK/release.sig" "$WORK/release.zip"
 
 # 2. Extract the archive and check each file against the SHA-256 sums in checksum.txt.
+mkdir "$WORK/release"
 unzip -q "$WORK/release.zip" -d "$WORK/release"
 (cd "$WORK/release" && sha256sum -c checksum.txt)
 
@@ -689,8 +692,10 @@ mv "$WORK/release/$DB" "$DIR/$DB"
 
 # 5. Reload Nginx. If the config test or the reload fails, put the previous file back.
 if ! { nginx -t && nginx -s reload; }; then
-  if [ -f "$WORK/previous.mmdb" ]; then mv "$WORK/previous.mmdb" "$DIR/$DB"; fi
-  echo "Nginx rejected the new $DB; the previous file was restored." >&2
+  if [ -f "$WORK/previous.mmdb" ]; then
+    mv "$WORK/previous.mmdb" "$DIR/$DB"
+    echo "nginx -t or the reload failed; the previous $DB was restored." >&2
+  fi
   exit 1
 fi
 ```
