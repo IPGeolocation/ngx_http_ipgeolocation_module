@@ -654,20 +654,55 @@ mmdbio read --db /etc/nginx/ipgeo/db-ip-security.mmdb --ip 2.56.188.34
 IPGeolocation.io publishes refreshed databases daily. Replace the files on disk, then reload Nginx so workers open the new versions.
 
 > [!IMPORTANT]
-> The module memory-maps each database, so never overwrite a live `.mmdb` file in place (for example with `cp` or `wget -O`). Workers can read a half-written file and crash. Download to a temporary file in the **same directory**, then `mv` it over the old one, which is an atomic swap. Always run `nginx -t` before reloading so a corrupt download never takes the server down.
+> Each download is a ZIP archive that contains the `.mmdb` file, a `README.md` and a `checksum.txt`, so never save the download itself under a `.mmdb` name. The module memory-maps each database, so never overwrite a live `.mmdb` file in place (for example with `cp` or `wget -O`): workers can read a half-written file and crash. The script below checks the archive's signature and checksums, extracts the database to a temporary directory inside the **same directory**, confirms it opens with `mmdbio verify`, and only then moves it over the old file, which is an atomic swap. It keeps the previous file until `nginx -t` and the reload succeed, and puts it back if either fails.
+
+The script needs `curl`, `openssl`, `unzip`, `sha256sum` and [mmdbio](https://github.com/IPGeolocation/mmdbio). Before the first run, save the public key from your Public Key URL as `/etc/nginx/ipgeo/public-key.pem`.
 
 ```bash
 #!/bin/sh
-set -e
+set -eu
+# cron runs with a minimal PATH, so make sure nginx and mmdbio can be found.
+export PATH="/usr/local/nginx/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 DIR=/etc/nginx/ipgeo
-URL="https://your-static-download-link"   # from your IPGeolocation.io account
+DB=db-ip-security.mmdb                              # the .mmdb file inside the archive
+ARCHIVE_URL="https://your-database-archive-url"    # from your IPGeolocation.io account
+SIGNATURE_URL="https://your-signature-file-url"    # the archive URL with downloadSignature=true
+PUBLIC_KEY="$DIR/public-key.pem"                   # saved once from your Public Key URL
 
-curl -fsSL "$URL" -o "$DIR/db-ip-security.mmdb.tmp"
-mv "$DIR/db-ip-security.mmdb.tmp" "$DIR/db-ip-security.mmdb"
-nginx -t && nginx -s reload
+# Work inside $DIR so the final mv stays on one filesystem, which makes it atomic.
+WORK=$(mktemp -d "$DIR/.update.XXXXXX")
+trap 'rm -rf "$WORK"' EXIT
+
+# 1. Download the release archive (a ZIP) and its signature, then check the signature.
+curl -fsSL "$ARCHIVE_URL" -o "$WORK/release.zip"
+curl -fsSL "$SIGNATURE_URL" -o "$WORK/release.sig"
+openssl dgst -sha256 -verify "$PUBLIC_KEY" -signature "$WORK/release.sig" "$WORK/release.zip"
+
+# 2. Extract the archive and check each file against the SHA-256 sums in checksum.txt.
+mkdir "$WORK/release"
+unzip -q "$WORK/release.zip" -d "$WORK/release"
+(cd "$WORK/release" && sha256sum -c checksum.txt)
+
+# 3. Confirm the extracted file opens as an MMDB database.
+mmdbio verify --db "$WORK/release/$DB"
+
+# 4. Keep the current file (a hard link, so no copy), then swap the new one in.
+if [ -f "$DIR/$DB" ]; then ln "$DIR/$DB" "$WORK/previous.mmdb"; fi
+mv "$WORK/release/$DB" "$DIR/$DB"
+
+# 5. Reload Nginx. If the config test or the reload fails, put the previous file back.
+if ! { nginx -t && nginx -s reload; }; then
+  if [ -f "$WORK/previous.mmdb" ]; then
+    mv "$WORK/previous.mmdb" "$DIR/$DB"
+    echo "nginx -t or the reload failed; the previous $DB was restored." >&2
+  fi
+  exit 1
+fi
 ```
 
 Schedule it with cron or a systemd timer, for example, daily at 04:00: `0 4 * * * /usr/local/bin/update-ipgeo.sh`.
+
+To update more than one database, run a copy of the script for each archive with its own `DB`, `ARCHIVE_URL` and `SIGNATURE_URL`.
 
 ---
 
