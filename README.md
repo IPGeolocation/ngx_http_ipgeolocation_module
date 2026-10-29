@@ -662,7 +662,7 @@ The script needs `curl`, `openssl`, `unzip`, `sha256sum` and [mmdbio](https://gi
 #!/bin/sh
 set -eu
 # cron runs with a minimal PATH, so make sure nginx and mmdbio can be found.
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+export PATH="/usr/local/nginx/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 DIR=/etc/nginx/ipgeo
 DB=db-ip-security.mmdb                              # the .mmdb file inside the archive
 ARCHIVE_URL="https://your-database-archive-url"    # from your IPGeolocation.io account
