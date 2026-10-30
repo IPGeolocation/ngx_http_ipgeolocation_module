@@ -275,10 +275,10 @@ If a database fails to open, Nginx refuses to start and logs the reason, so a ba
 ```bash
 Syntax:   ipgeolocation_trust_forwarded_header on | off;
 Context:  http
-Default:  on
+Default:  off
 ```
 
-Controls which IP address the module geolocates. When `on` (the default), the module uses the first address in the `X-Forwarded-For` header if that header is present, and falls back to the real connection peer address otherwise. When `off`, it always uses the real peer address.
+Controls which IP address the module geolocates. By default (`off`), it uses the connection address, including the client address selected by the Nginx realip module. When explicitly set to `on`, it uses the first address in `X-Forwarded-For`, falling back to the connection address when the header is absent, empty, or too long.
 
 The directive is only valid in the `http` block, so one setting applies to every `server`. We recommend `off` for most deployments, because clients can spoof `X-Forwarded-For`. See [safe client IP selection behind proxies](#client-ip-selection-and-x-forwarded-for) for details.
 
@@ -605,8 +605,8 @@ location = /debug/abuse {
 
 The module geolocates a single IP address per request. Which one it uses depends on `ipgeolocation_trust_forwarded_header`.
 
-- **Default (`on`):** if an `X-Forwarded-For` header is present, the module reads the first (leftmost) address in it, trimming surrounding spaces. If the header is absent, empty, or unusable, it falls back to the real connection peer address.
-- **`off`:** the module always uses the real connection peer address and ignores `X-Forwarded-For` entirely.
+- **Default (`off`):** the module uses the connection address, including the client address selected by the Nginx realip module. It does not read `X-Forwarded-For` itself.
+- **Explicit `on`:** the module reads the first (leftmost) address in `X-Forwarded-For`, trimming surrounding spaces. If the header is absent, empty, or too long, it falls back to the connection address. Use this option only when your proxy overwrites the header.
 
 > [!IMPORTANT]
 > The leftmost `X-Forwarded-For` address is controlled by the client. Many load balancers and CDNs **append** the real IP to the header instead of replacing it, so a visitor can send a fake header to change their apparent country or hide a flagged IP, even behind a proxy. Keep `on` only if your proxy overwrites the header. Otherwise, set `ipgeolocation_trust_forwarded_header off;` and use the [Nginx realip module](https://nginx.org/en/docs/http/ngx_http_realip_module.html) (`set_real_ip_from` plus `real_ip_header`), which replaces the peer address with the true client IP from trusted proxies only.
