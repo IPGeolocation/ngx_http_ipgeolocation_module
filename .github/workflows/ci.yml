@@ -1,0 +1,62 @@
+name: Module checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Nginx ${{ matrix.nginx.version }} (${{ matrix.linkage }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        nginx:
+          - version: "1.30.6"
+            sha256: "3cf46f5ed7504d460125866b7bea99fb357f31d887e2e63b35503310e9b8b6c8"
+          - version: "1.31.8"
+            sha256: "0652b760b3b772d2ec17b47c2fc15d9a95e6fe35cd5b877eadc1a62d9bc75af1"
+        linkage: [static, dynamic]
+    env:
+      NGINX_VERSION: ${{ matrix.nginx.version }}
+      NGINX_SHA256: ${{ matrix.nginx.sha256 }}
+      MODULE_LINKAGE: ${{ matrix.linkage }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libmaxminddb-dev libpcre2-dev
+      - name: Download Nginx
+        working-directory: ${{ runner.temp }}
+        run: |
+          curl --fail --silent --show-error --location \
+            "https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz" -o nginx.tar.gz
+          printf '%s  %s\n' "$NGINX_SHA256" nginx.tar.gz | sha256sum --check
+          tar -xzf nginx.tar.gz
+      - name: Build Nginx and module
+        working-directory: ${{ runner.temp }}
+        run: |
+          cd "nginx-${NGINX_VERSION}"
+          if [ "$MODULE_LINKAGE" = dynamic ]; then
+            module_flags=("--add-dynamic-module=$GITHUB_WORKSPACE" --with-compat)
+          else
+            module_flags=("--add-module=$GITHUB_WORKSPACE")
+          fi
+          ./configure --prefix="$RUNNER_TEMP/nginx-runtime" \
+            --with-http_realip_module --without-http_gzip_module "${module_flags[@]}"
+          make -j2
+      - name: Run module tests
+        run: |
+          nginx_binary="$RUNNER_TEMP/nginx-${NGINX_VERSION}/objs/nginx"
+          if [ "$MODULE_LINKAGE" = dynamic ]; then
+            python3 tests/test_module.py --nginx "$nginx_binary" \
+              --module "$RUNNER_TEMP/nginx-${NGINX_VERSION}/objs/ngx_http_ipgeolocation_module.so"
+          else
+            python3 tests/test_module.py --nginx "$nginx_binary"
+          fi

@@ -26,11 +26,10 @@
  *     make && make install
  *
  * Client IP selection:
- *     By default the first address in X-Forwarded-For is used when that header
- *     is present, otherwise the real connection peer address. Set
- *     `ipgeolocation_trust_forwarded_header off;` to always use the peer
- *     address (recommended unless nginx sits behind a trusted proxy that you
- *     control, because X-Forwarded-For can be spoofed by clients).
+ *     By default the connection address is used, including the client address
+ *     selected by the nginx realip module. Set
+ *     `ipgeolocation_trust_forwarded_header on;` only when your proxy overwrites
+ *     X-Forwarded-For with the client address.
  */
 
  #include <ngx_config.h>
@@ -714,8 +713,8 @@
  {
      ngx_http_ipgeo_main_conf_t  *mcf = conf;
  
-     /* Honour X-Forwarded-For by default (backward compatible). */
-     ngx_conf_init_value(mcf->trust_xff, 1);
+     /* Use the connection address unless forwarded-header trust is enabled. */
+     ngx_conf_init_value(mcf->trust_xff, 0);
  
      return NGX_CONF_OK;
  }
