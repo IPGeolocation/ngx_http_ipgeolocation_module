@@ -185,7 +185,7 @@ Add the module configuration to the `http` block of your `nginx.conf`:
 ```nginx
 http {
     # Load one or more IPGeolocation.io databases. Declaration order is priority order.
-    ipgeolocation_db /etc/nginx/ipgeo/db-ip-geolocation.mmdb;
+    ipgeolocation_db /etc/nginx/ipgeo/db-ip-location.mmdb;
     ipgeolocation_db /etc/nginx/ipgeo/db-ip-security.mmdb;
 
     # Nginx faces the internet directly, so geolocate the real peer address
@@ -260,11 +260,11 @@ Loads an IPGeolocation.io MMDB file and keeps it in memory. **You can specify th
 
 ```nginx
 http {
-    ipgeolocation_db /etc/nginx/ipgeo/db-ip-geolocation.mmdb;
+    ipgeolocation_db /etc/nginx/ipgeo/db-ip-location.mmdb;
     ipgeolocation_db /etc/nginx/ipgeo/db-ip-company.mmdb;
     ipgeolocation_db /etc/nginx/ipgeo/db-ip-asn.mmdb;
     ipgeolocation_db /etc/nginx/ipgeo/db-ip-security.mmdb;
-    ipgeolocation_db /etc/nginx/ipgeo/db-ip-abuse-contact.mmdb;
+    ipgeolocation_db /etc/nginx/ipgeo/db-ip-abuse.mmdb;
 }
 ```
 
