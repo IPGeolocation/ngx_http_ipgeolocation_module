@@ -329,7 +329,7 @@ Requires the [IP Geolocation database](https://ipgeolocation.io/ip-geolocation-d
 
 ### Location: postal, coordinates, time zone
 
-`$ip_accuracy_radius` and `$ip_confidence` are only available in the [Geo Advance database tier](https://ipgeolocation.io/geo-advance-databases.html).
+`$ip_accuracy_radius` and `$ip_confidence` are only available in the [Geo Advanced database tier](https://ipgeolocation.io/geo-advance-databases.html).
 
 | Variable | Description | Example |
 | --- | --- | --- |
@@ -338,8 +338,8 @@ Requires the [IP Geolocation database](https://ipgeolocation.io/ip-geolocation-d
 | `$ip_longitude` | Longitude in decimal degrees | `-75.165220` |
 | `$ip_geoname_id` | GeoNames place ID | `9849057` |
 | `$ip_time_zone` | Time zone name | `America/New_York` |
-| `$ip_accuracy_radius` | Accuracy radius in km (Advance tier) | `9.148` |
-| `$ip_confidence` | Location confidence: low, medium, high (Advance tier) | `high` |
+| `$ip_accuracy_radius` | Accuracy radius in km (Geo Advanced tier) | `9.148` |
+| `$ip_confidence` | Location confidence: low, medium, high (Geo Advanced tier) | `high` |
 
 ### Company and ISP
 
@@ -631,7 +631,7 @@ This module reads IPGeolocation.io MMDB files. You download the databases from y
 
 Relevant databases and their documentation:
 
-- [IP Geolocation Database](https://ipgeolocation.io/ip-geolocation-database.html): country, state, city, postal code, coordinates, currency, and time zone. Available in [Geo Standard](https://ipgeolocation.io/geo-standard-databases.html) and [Geo Advance](https://ipgeolocation.io/geo-advance-databases.html) tiers (Advance adds accuracy radius and confidence).
+- [IP Geolocation Database](https://ipgeolocation.io/ip-geolocation-database.html): country, state, city, postal code, coordinates, currency, and time zone. Available in [Geo Standard](https://ipgeolocation.io/geo-standard-databases.html) and [Geo Advanced](https://ipgeolocation.io/geo-advance-databases.html) tiers (Geo Advanced adds accuracy radius and confidence).
 - [IP Security Database](https://ipgeolocation.io/ip-security-database.html): threat score plus VPN, proxy, Tor, relay, bot, spam, attacker, corporate gateway, and cloud provider flags. See the [IP Security database fields and schema](https://ipgeolocation.io/documentation/ip-security-database.html).
 - [Residential Proxy Database](https://ipgeolocation.io/residential-proxy-database.html): residential proxy provider name and last seen date.
 - [IP Hosting Database](https://ipgeolocation.io/ip-hosting-database.html): hosting provider name.
