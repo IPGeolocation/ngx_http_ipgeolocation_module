@@ -393,6 +393,9 @@ Boolean flags resolve to `1` or `0` so you can test them directly in `if` blocks
 | `$ip_proxy_confidence` | Proxy confidence score | `80` |
 | `$ip_vpn_confidence` | VPN confidence score | `80` |
 | `$ip_proxy_last_seen` | Date the IP was last seen as a proxy | `2025-12-12` |
+| `$ip_proxy_days_seen_7d` | Days in the last 7 the IP was seen acting as a proxy | `2` |
+| `$ip_proxy_days_seen_30d` | Days in the last 30 the IP was seen acting as a proxy | `9` |
+| `$ip_proxy_provider_count_30d` | Distinct proxy providers seen on the IP in the last 30 days | `3` |
 | `$ip_vpn_last_seen` | Date the IP was last seen as a VPN | `2026-01-19` |
 | `$ip_bot_confidence_score` | Confidence score for detected bot activity, 0 to 100 | `95` |
 | `$ip_bot_operator_name` | Name of the bot operator, when available | `ChatGPT` |
@@ -409,8 +412,10 @@ Requires the [residential proxy detection database](https://ipgeolocation.io/res
 
 | Variable | Description | Example |
 | --- | --- | --- |
-| `$ip_residential_proxy_provider_name` | Residential proxy provider name | `Evomi Proxy` |
+| `$ip_residential_proxy_provider_name` | Residential proxy provider names, comma separated | `Proxy-Seller, ProxyWing` |
 | `$ip_residential_proxy_last_seen` | Date last seen as a residential proxy | `2026-05-23` |
+
+Version 2 of the Residential Proxy database also fills `$ip_proxy_days_seen_7d`, `$ip_proxy_days_seen_30d` and `$ip_proxy_provider_count_30d` from the [security table](#security-and-threat-intelligence). The IP Security database uses the same field names, so when both databases are loaded the value comes from the first `ipgeolocation_db` that has it.
 
 ### Hosting
 
@@ -633,7 +638,7 @@ Relevant databases and their documentation:
 
 - [IP Geolocation Database](https://ipgeolocation.io/ip-geolocation-database.html): country, state, city, postal code, coordinates, currency, and time zone. Available in [Geo Standard](https://ipgeolocation.io/geo-standard-databases.html) and [Geo Advanced](https://ipgeolocation.io/geo-advance-databases.html) tiers (Geo Advanced adds accuracy radius and confidence).
 - [IP Security Database](https://ipgeolocation.io/ip-security-database.html): threat score plus VPN, proxy, Tor, relay, bot, spam, attacker, corporate gateway, and cloud provider flags. See the [IP Security database fields and schema](https://ipgeolocation.io/documentation/ip-security-database.html).
-- [Residential Proxy Database](https://ipgeolocation.io/residential-proxy-database.html): residential proxy provider name and last seen date.
+- [Residential Proxy Database](https://ipgeolocation.io/residential-proxy-database.html): residential proxy provider names, last seen date, and 7-day and 30-day proxy activity counts.
 - [IP Hosting Database](https://ipgeolocation.io/ip-hosting-database.html): hosting provider name.
 - [IP Company Database](https://ipgeolocation.io/ip-company-database.html): company or ISP name, domain, and type. See the [IP Company database schema reference](https://ipgeolocation.io/documentation/ip-company-database.html).
 - [IP to ASN Database](https://ipgeolocation.io/ip-asn-database.html): AS number, organization, type, RIR, and allocation date. See the [IP to ASN extended database schema](https://ipgeolocation.io/documentation/ip-asn-database-extended.html).
