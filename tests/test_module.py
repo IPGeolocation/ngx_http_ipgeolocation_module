@@ -62,7 +62,7 @@ http {{
         listen {address}:{self.port};
         location = /inspect {{
             default_type application/json;
-            return 200 '{{"ip":"$remote_addr","country":"$ip_country_code","vpn":"$ip_is_vpn","tor":"$ip_is_tor","score":"$ip_threat_score","asn":"$ip_asn","providers":"$ip_vpn_provider"}}';
+            return 200 '{{"ip":"$remote_addr","country":"$ip_country_code","vpn":"$ip_is_vpn","tor":"$ip_is_tor","score":"$ip_threat_score","asn":"$ip_asn","providers":"$ip_vpn_provider","residential":"$ip_residential_proxy_provider_name","residential_seen":"$ip_residential_proxy_last_seen","days7":"$ip_proxy_days_seen_7d","days30":"$ip_proxy_days_seen_30d","count30":"$ip_proxy_provider_count_30d"}}';
         }}
         location = /restricted {{
             if ($ip_is_vpn) {{ return 403; }}
@@ -223,6 +223,22 @@ class ModuleTests(unittest.TestCase):
             self.assertEqual(data["tor"], "0")
             self.assertEqual(data["score"], "30")
             self.assertEqual(data["providers"], "Legacy One, Legacy Two")
+
+    def test_residential_proxy_v2_lists_every_provider(self):
+        with Nginx(databases=["residential-v2.mmdb"]) as server:
+            data = server.inspect()
+            self.assertEqual(data["residential"], "Proxy-Seller, ProxyWing")
+            self.assertEqual(data["residential_seen"], "2026-11-07")
+            self.assertEqual(data["days7"], "2")
+            self.assertEqual(data["days30"], "5")
+            self.assertEqual(data["count30"], "2")
+
+    def test_residential_proxy_v1_single_provider_still_works(self):
+        with Nginx(databases=["residential-v1.mmdb"]) as server:
+            data = server.inspect()
+            self.assertEqual(data["residential"], "Evomi Proxy")
+            self.assertEqual(data["residential_seen"], "2026-05-23")
+            self.assertEqual(data["days7"], "")
 
     def test_database_declaration_order_is_preserved(self):
         for databases, expected in [(["nested.mmdb", "legacy.mmdb"], "US"),

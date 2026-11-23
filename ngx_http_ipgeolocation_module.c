@@ -226,14 +226,25 @@
          { {"security","vpn_confidence_score",NULL}, {"vpn_confidence_score",NULL} } },
      { "ip_proxy_last_seen",
          { {"security","proxy_last_seen",NULL}, {"proxy_last_seen",NULL} } },
+     /* Proxy activity counts: same keys in the IP Security database and in
+      * the Residential Proxy database v2; the first database listed wins. */
+     { "ip_proxy_days_seen_7d",
+         { {"security","proxy_days_seen_7d",NULL}, {"proxy_days_seen_7d",NULL} } },
+     { "ip_proxy_days_seen_30d",
+         { {"security","proxy_days_seen_30d",NULL}, {"proxy_days_seen_30d",NULL} } },
+     { "ip_proxy_provider_count_30d",
+         { {"security","proxy_provider_count_30d",NULL}, {"proxy_provider_count_30d",NULL} } },
      { "ip_vpn_last_seen",
          { {"security","vpn_last_seen",NULL}, {"vpn_last_seen",NULL} } },
      { "ip_proxy_type",        /* legacy flat field */
          { {"security","proxy_type",NULL}, {"proxy_type",NULL} } },
  
      /* ---- Residential proxy ---------------------------------------------- */
+     /* proxy_providers (v2 database) is an array -> all names joined with ", ";
+      * proxy_provider (v1 database) is a single name, kept as a fallback. */
      { "ip_residential_proxy_provider_name",
-         { {"security","proxy_provider",NULL}, {"proxy_provider",NULL} } },
+         { {"security","proxy_providers",NULL}, {"proxy_providers",NULL},
+           {"security","proxy_provider",NULL}, {"proxy_provider",NULL} } },
      { "ip_residential_proxy_last_seen",
          { {"security","last_seen",NULL}, {"last_seen",NULL} } },
  
